@@ -8,81 +8,168 @@ from tkinter import ttk
 #Then create an instance of the class to activate the GUI.
 class GUI:
     def __init__(self):
-        self.main_window = tk.Tk() # Creates the Main Window
-        
-        self.main_window.title("Tk Example") # Sets the title of the GUI Window
-        self.main_window.configure(bg="black") # Sets the Background of the GUI Window
-        self.main_window.minsize(200, 200) # Sets the Minimum Size
-        self.main_window.maxsize(500, 500) # Sets the Maximum Size
-        self.main_window.geometry("300x300+50+50") # (height+width+x coord+y coord)
+        self.root = tk.Tk()		 	            # Creates a window named “root”
+        self.root.title("Window Title")           # Makes the Window's Title
+        self.root.geometry("300x300+200+200") 	# Sets size and position (Width x Height + x position + y Position)
+        self.root.attributes("alpha", 1.0) 	    # Allows setting attributes
+	        # “-alpha”, value (0.0 to 1.0)	Controls transparency
+	        # “-topmost”, True/False	Makes it stay on top
+	        # “-fullscreen”, True/False 	Toggles fullscreen mode
+        self.root.resizeable(width=True, height=True)   # Lets you resize the window (Default is True)
+        self.root.iconphoto(True, PhotoImage_Object)   # Sets the Window Icon
+        self.root.destroy()         # Closes the window
+        self.root.withdraw()        # Hides the window (not destroys)
+        self.root.deiconify()	    # Restores a hidden or minimized window
+        self.root.lift()		    # Bring the window to the front
+        self.root.update()	        # Forces tkinter to process pending events
+        self.root.mainloop()	    # Starts the eventloop, listening for events.
+    
+    frame = tk.Frame(root, width=100, height=100, bg="red", relief="solid", padx=10, pady=10).  #Creates a frame
+	    # width, height	Creates dimensions of the frame
+	    # bg or background	Background color
+	    # bd or borderwidth	Width of the Border around frame
+	    # relief		Style of the border
+	    # cursor	changes mouse appearance when over frame
+	    # padx, pady	creates padding around the frame
+    
+    frame.grid(root, column=1, row=2, columspan=2, sticky="N")	# sets the item into a grid
+        # column	        the col number the widget occupies, start at 0.
+        # columnspan	    number of columns the widget takes
+        # in_		        register widget as a child
+        # ipadx, ipady	    internal padding
+        # padx, pady	    external padding
+        # row	            the row number the widget occupies, start at 0.
+        # rowspan		    number of rows the widget takes
+        # sticky	        determines how to stick in a cell
+	                # uses N, NE, S, SE method.
+            # To make it stretch to fit, use E+W to stretch horizontally.
+            # To make it stretch to fit, use N+S to stretch vertically.
 
-        # Creates the frames for each of the wigets used in this example
-        self.label_frame = tk.Frame(self.main_window, bg="lightblue") # Creates a Light Blue Frame
-        self.label_frame.pack()
-        self.check_frame = tk.Frame(self.main_window, bg="blue") # Creates a Blue Frame
-        self.check_frame.pack()
-        self.combo_frame = tk.Frame(self.main_window, bg="green") # Creates a Green Frame
-        self.combo_frame.pack()
+    frame.pack(root, anchor="N", padx=10, pady=10)	# packs the item
+	    # expand (0, or 1)	    should expand to fill space
+	    # fill                  (NONE, X, Y, BOTH) How to resize as child
+	    # side                  (TOP, BOTTOM, RIGHT, LEFT)
+		                # Which side of the parent is used for child
+        # in_		            register widget as a child
+        # ipadx, ipady	        internal padding
+        # padx, pady	        external padding
+        # anchor		        Specifies where it should be placed
+	                    # uses N,S,E,W,CENTER syntax
 
-        # A list of the Widgets.
-        widgets = [
-        tk.Label, # This allows you to put text in the widget
-        tk.Checkbutton, # Allows for a user Checkbox
-        ttk.Combobox, # Creates a Dropdown 
-        tk.Entry, # Allows for a user to enter text.
-        tk.Button, # Creates a button that can be pressed.
-        tk.Radiobutton, # Creates a Radio Button
-        tk.Scale, # Creates a Slider scale the user can move.
-        tk.Spinbox, # Creates an Integer Spinner
-        ]
+    
+    frame.place(root, x=150, y=350)	# places the item
+        #anchor		                            Specifies where it should be placed
+	        # used N,S,E,W,CENTER syntax
+        # bordermode (INSIDE, OUTSIDE)          specifies if the border should be inside or outside
+        # in_		                            register widget as a child
+	    # relwidth, relheight Float [0.0, 1.0]  size of the child widget related to the parent
+	    # relx, rely Float [0.0, 1.0]           position of the child widget related to the parent
+	    # width, height	                        Absolute height/width of widget
+	    # x, y		                            Absolute position of the widget
 
-        # Example Label Widget
-        label = tk.Label(self.label_frame, text="Hello", font=("Helvetica", 30), bg="lightblue", fg="black") # Makes a label showing Hello
-        label.config(text="This is a Test") # Changes the text to Goodbye
-        label.config(anchor="w") # Aligns test to the "west (left)" of the screen ("center" for center) 
-        label.pack(padx=5, pady=5)
+    # Using variables in Tkinter
+    var = IntVar()		        # creates an Integer Variable
+    var = FloatVar()		    # creates a Float Variable
+    var = StringVar()		    # creates a String Variable
+    var = BooleanVar()		    # creates a Boolean Variable
 
-        # Example Checkbutton Widget
-        # This function sets the label to Checked when the box is Checked, and Unchecked when it isn't.
-        def show_state(): 
-            checked = "Checked" if cked.get() else "Unchecked"
-            checkbox.config(text=f"Check me! ({checked})")
+    var.get()			                        # returns the current value
+    var.set(x)			                        # sets the value to x
+    var.trace_add(“mode”, callback)             # calls function when var changes
+    var.trace_remove(“mode”, callback_name)     #removes a trace callback
+	    # modes: 	
+            # write – when the variable is modified
+		    # read – when the variable is read
+		    # unset – when the variable is deleted
 
-        cked = tk.IntVar() # Sets up the cked variable 
-        checkbox = tk.Checkbutton(self.check_frame, text="Check me! (Checked)", bg="blue", variable=cked)
-        checkbox.select() # Selects the checkbox, Deselect deselects the box.
-        checkbox.config(command = show_state) # This calls the function "show_state" when the checkbox is ticked.
-        checkbox.pack(padx=5, pady=10, anchor="w")
+    # Common Widget Methods
+    config(attrubute)		# configure options after creation
+    cget(attribute)		    # gets value of an option
+    destroy()			    # removes the widget
+    bind(event, handler)	# binds events
+    after(ms, func)		    # calls a function after a delay
+    update()			    # manually refresh the widget
 
-        # Example Dropdown Widget
-        def dd_selection_changed(event):
-            label2.config(text=f"{event.widget.get()} selected!")
-        
-        label2 = tk.Label(self.combo_frame, text="Alpha Selected", bg="green")
-        combobox = ttk.Combobox(self.combo_frame, values=["Alpha", "Beta", "Gamma"])
-        combobox.set("Alpha")
-        combobox.bind("<<ComboboxSelected>>", dd_selection_changed) # This calls the function when the selection changes.
-        combobox.pack(padx=5, pady=5, fill="x", anchor="s")
-        label2.pack(anchor="n")
+    # Attributes used in Widgets
+        # Text
+            # text → Display text for Label, Button, Radiobutton, Checkbutton
+            # image → Display image (PhotoImage or BitmapImage)
+            # compound → Combines text and image (top, bottom, left, right, center)
+            # justify → Align multi-line text (left, center, right)
+            # wraplength → Wrap text after X pixels
+        # Font
+            # font → Font family, size, style (e.g., ("Arial", 12, "bold"))
+            # fg → Foreground/text color
+            # bg → Background color
+            # highlightbackground → Border color when not focused
+            # highlightcolor → Border color when focused
+            # activeforeground → Text color when active 
+            # activebackground → Background color when active
+        # Dimensions & Placement
+            # width → Width of widget (chars for Entry, pixels for Scale)
+            # height → Height of widget (chars/lines for Label)
+            # padx, pady → Padding inside geometry managers (pack, grid)
+            # relief → Border style (flat, raised, sunken, groove, ridge)
+            # bd → Border width
+            # anchor → Position of content inside widget (n, s, e, w, center)
+        # State & Interaction
+            # state → Widget state: normal, disabled, active
+            # command → Function executed on action
+            # variable → Linked IntVar, StringVar, or FloatVar
+            # value → Value of a Radiobutton when selected
+            # onvalue / offvalue → Values for Checkbutton when checked/unchecked
+            # show → Mask character for Entry (e.g., "*" for password)
+            # validate → Input validation mode (focus, key, etc.)
+            # validatecommand → Function executed for validation
 
-        # Listbox Widget
-        def lb_selection_changed(event):
-            selection = event.widget.curselection()
-            if selection:
-                index = selection[0]
-                label.config(text=f"{event.widget.get(index)} selected!")
-                event.widget.get(index)
+# Widgets
 
-        listbox = tk.Listbox(root)
-        for item in ["Alpha", "Beta", "Gamma"]:
-            listbox.insert(tk.END, item)
-        listbox.bind("<<ListboxSelect>>", lb_selection_changed)
-        listbox.pack(padx=5, pady=5, fill="both", expand=True)
+    # Label
+    widget = tk.Label(parent, text="", -attributes)	    # creates a text label
+    # Attributes
+        # text, image, compound, justify, wraplength, fg, bg, font, width, height, anchor, relief, bd
 
-        # A helper label to show the selected value
-        label = tk.Label(root, text="One selected!")
-        label.pack(padx=5, pady=5, fill="x")
+    
+    # Button
+    widget = tk.Button(parent, text="", command=function -attributes)	# creates a Button
+    #Attributes
+        #text, command, state, activeforeground, activebackground, fg, bg, font, width, height, relief, bd
 
-        self.main_window.mainloop()
+    # Entry
+    widget = tk.Entry(parent, -attributes)	        # creates a Text Entry Box
+    # Attributes
+        # width, show, textvariable, fg, bg, font, relief, bd, state
 
-GUI()
+    # Option Box
+    widget = ttk.Optionbox(parent, values = ["","",""], -attributes)    # creates a Dropdown Menu
+    # Attributes
+        # variable, values, fg, bg, font, width, height, relief, bd
+
+    # Radio Button
+    widget = tk.Radiobutton(parent, -attributes)	# creates a Radio Button
+    # Attributes
+        #text, variable, value, state, fg, bg, font, width, height, relief, bd
+
+    # Check Button
+    widget = tk.Checkbutton(parent, -attributes)	    #creates a Check Button
+    # Attributes
+        # text, variable, onvalue, offvalue, state, fg, bg, font, width, height, relief, bd
+
+    # Spinbox
+    widget = tk.Spinbox(parent, from_=0, to=10, incriment=1, -attributes)	# creates a Spinbox
+    #Attributes
+        #from_, to, increment, width, state, fg, bg, font, relief, bd, textvariable
+
+    # Scale
+    widget = tk.Scale(parent, from_=0, to=100, -attributes)		# creates a Scale Slider
+    # Attributes
+        # from_, to, orient, length, tickinterval, resolution, variable, showvalue, 
+        # troughcolor, sliderlength, fg, bg, font, width, height, relief, bd
+ 
+    # Example of a password Entry Box, showing only asterisks.
+    password_entry = tk.Entry(root, show="*")
+
+    # Example of a quit button
+    exit_button = tk.Button(root, text="Exit", command=root.destroy)
+
+
