@@ -32,7 +32,7 @@ class GUI:
 	    # cursor	changes mouse appearance when over frame
 	    # padx, pady	creates padding around the frame
     
-    frame.grid(root, column=1, row=2, columspan=2, sticky="N")	# sets the item into a grid
+    frame.grid(column=1, row=2, columspan=2, sticky="N")	# sets the item into a grid
         # column	        the col number the widget occupies, start at 0.
         # columnspan	    number of columns the widget takes
         # in_		        register widget as a child
@@ -45,7 +45,7 @@ class GUI:
             # To make it stretch to fit, use E+W to stretch horizontally.
             # To make it stretch to fit, use N+S to stretch vertically.
 
-    frame.pack(root, anchor="N", padx=10, pady=10)	# packs the item
+    frame.pack(anchor="N", padx=10, pady=10)	# packs the item
 	    # expand (0, or 1)	    should expand to fill space
 	    # fill                  (NONE, X, Y, BOTH) How to resize as child
 	    # side                  (TOP, BOTTOM, RIGHT, LEFT)
@@ -57,7 +57,7 @@ class GUI:
 	                    # uses N,S,E,W,CENTER syntax
 
     
-    frame.place(root, x=150, y=350)	# places the item
+    frame.place(x=150, y=350)	# places the item
         #anchor		                            Specifies where it should be placed
 	        # used N,S,E,W,CENTER syntax
         # bordermode (INSIDE, OUTSIDE)          specifies if the border should be inside or outside
@@ -68,10 +68,10 @@ class GUI:
 	    # x, y		                            Absolute position of the widget
 
     # Using variables in Tkinter
-    var = IntVar()		        # creates an Integer Variable
-    var = FloatVar()		    # creates a Float Variable
-    var = StringVar()		    # creates a String Variable
-    var = BooleanVar()		    # creates a Boolean Variable
+    var = tk.IntVar()		        # creates an Integer Variable
+    var = tk.DoubleVar()		    # creates a Float Variable
+    var = tk.StringVar()		    # creates a String Variable
+    var = tk.BooleanVar()		    # creates a Boolean Variable
 
     var.get()			                        # returns the current value
     var.set(x)			                        # sets the value to x
