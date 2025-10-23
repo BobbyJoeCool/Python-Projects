@@ -227,9 +227,7 @@ def db_major():
                 output += f"{major_id:<10}  {name}\n"
             majorListString.set(output)
 
-            tk.Label(mainFrame, textvariable=majorListString, justify="left", font=("courier")).pack()
-
-            
+            tk.Label(mainFrame, textvariable=majorListString, justify="left", font=("courier")).pack()           
 
 ## For the Department Database
 def db_department():
@@ -579,6 +577,5 @@ def db_student():
             studListString.set(output)
 
             tk.Label(mainFrame, textvariable=studListString, justify="left", font=("courier")).pack()
-
 
 root.mainloop()
