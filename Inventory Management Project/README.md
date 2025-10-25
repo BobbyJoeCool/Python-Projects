@@ -4,6 +4,34 @@ This project is more of a "can I do it" project than anything else.  It is an at
 
 ## GUI Functions
 
+### Main Screen
+Along the top, there will be buttons for each function: Warehouse Functions, IM functions, LM Functions, OM Functions, Logout, and Quit.
+
+The rest of the screen will house the actual GUI.  Upon opening, a login screen will display (which will come back if the user logs out).
+
+Once the user logs in, the Warehouse WOrker Functions tab will automatically open
+
+Warehouse Worker Functions
+- PIP
+- SDP
+- MDP
+
+Inventory Manager Functions (everyone has access to these, editing requires permissions)
+- IUP
+- PII
+- PAR
+
+Location Management Functions
+- ELA
+- ELZ
+- WLI
+- ISI
+
+Operations Manager Funtions
+- LSU
+- CUI
+- CHL
+
 ### PIP - Pallet ID Pull
 Scan a label, then scan a pallet ID to pull a box or pallet from a location.  Automatically reduces the number of boxes by the appropriate amount from that location.
 
@@ -154,7 +182,7 @@ Similar to the PII interface, a button should bring up a popup that allows the e
 Create a Pallet - Enter Item ID, Quantity, Size, and optionally a location, and creates a pallet (with a unique Pallet ID and a storage code that matches the Item ID)
 
 #### GUI Design
-All 
+All entry boxes
 - Department
 - Class
 - Item
@@ -177,7 +205,45 @@ All
 - Create Pallet Button
     - Display Pallet ID (Also, print to Terminal)
 
-## Operations Manager GUI Functions
+### ELA - Empty Location by Aisle Lookup
+This function allows pallet movers to look for open locations by storage code and size and returns what aisles have empty locations, organized by most to least.
+
+#### GUI Setup
+- Entry box for Storage Code
+- Entry box for Size
+- Display table:
+    - Aisle
+    - Number of EACH size of empty locations in the aisle matching the storage code.
+- Button for ELZ 
+    - Selecting an Asile and clicking ELZ will take you to the ELZ tab for that Aisle and Storage Code.
+
+### ELZ - Empty Location by Zone Lookup
+
+This function allows pallet movers to look for open locations by storage code and size and returns what aisles have empty locations, organized by most to least.
+
+#### GUI Setup
+
+- Entry box for Aisle
+- Entry box for Storage Code
+- Display table:
+  - Each Zone in the Aisle
+  - Number of EACH size of empty locations in the zone matching the storage code.
+
+### WLI - Warehouse Location Information
+This allows a user to pull any information about a location, including it's current setup, and some limited information about the pallet stored there (if any)
+
+- Entry Box for Aisle
+- Entry Box for Bin
+- Entry Box for Level
+    - Upon entering these, brings up the location and returns the following information
+- Storeage Code
+- Size
+- Zone
+- Pallet ID (Default to N/A)
+- Pallet Status (Default to N/A)
+- Item ID (Default to N/A)
+- Item Name (Default to N/A)
+- Carton Count (Default to 0)
 
 ### LSU - Location Setup
 Allows the setup of locations.  Sets locations by aisle, starting at a certain bin and level, and ending at another bin and level (for example, creating aisle 310, bin 1-128, levels 2-10, all Storage Code CR, Size HS.). ALso allows the editing of locations already set up.
