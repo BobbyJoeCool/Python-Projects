@@ -9,7 +9,7 @@ Along the top, there will be buttons for each function: Warehouse Functions, IM 
 
 The rest of the screen will house the actual GUI.  Upon opening, a login screen will display (which will come back if the user logs out).
 
-Once the user logs in, the Warehouse WOrker Functions tab will automatically open
+Once the user logs in, the Warehouse Worker Functions tab will automatically open
 
 Warehouse Worker Functions
 - PIP
@@ -31,6 +31,29 @@ Operations Manager Funtions
 - LSU
 - CUI
 - CHL
+
+
+## File Management
+1) inventory_management/
+    - main.py — Entry point; manages login and main GUI window
+    1) gui/
+        - __init__.py
+        - wwGUI.py — Warehouse Worker (PIP, SDP, MDP)
+        - lmGUI.py — Location Management (ELA, ELZ, ISI, WLI)
+        - imGUI.py — Inventory Manaement (PII, PAR, IUP)
+        - omGUI.py — Operations Management (LSU, CUI, CHL)
+        - lcGUI.py — Label Control (LRP, LCR)
+    2) logic/
+        - __init__.py
+        - validators.py — Validation logic
+        - calculations.py — Any math or status logic
+        - workflow.py — Business logic connecting multiple actions
+    3) data/
+        - __init__.py
+        - database.py — Database connection and queries
+        - config.py — Paths, settings, constants
+        - database.db - squlite3 database
+
 
 ### PIP - Pallet ID Pull
 Scan a label, then scan a pallet ID to pull a box or pallet from a location.  Automatically reduces the number of boxes by the appropriate amount from that location.
@@ -333,6 +356,8 @@ Forces a full clear of a location in case something happens that causes the syst
 | LocationID | TEXT      | PRIMARY KEY (Composite of AisleBinLevel)
 | StorageCode| TEXT      | FOREIGN KEY (StorageCodes Table)
 | Size       | TEXT      |
+| Status     | TEXT      |
+| Zone       | TEXT      |
 
 ### Storage Codes
 

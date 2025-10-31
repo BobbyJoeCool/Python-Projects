@@ -2,9 +2,9 @@
 
 import tkinter as tk
 from tkinter import messagebox, ttk, font
+import logic.validators as val
 
 class WarehouseWorkerGUI():
-
 # Create the PIP Tab
     def buildPIP(self):
     # Build PIP Variables
@@ -18,6 +18,7 @@ class WarehouseWorkerGUI():
         palletID = tk.StringVar()
         palletStatus = tk.StringVar()
         altID = tk.StringVar()
+        pullStatus = tk.StringVar()
 
     # Configure the Frame so it is centered in the tab
         centerWrapper = ttk.Frame(self.pipTab)
@@ -32,8 +33,8 @@ class WarehouseWorkerGUI():
         pullModeEntry = ttk.Entry(pipFrame, textvariable=pullMode,width=2)
         labelIDLabel = ttk.Label(pipFrame, text="Scan Label:")   
         labelIDEntry = ttk.Entry(pipFrame, textvariable=labelID, width=15)
-        palletLocLabel = ttk.Label(pipFrame, text="Location:")
-        palletLocDisplay = ttk.Label(pipFrame, textvariable=palletLoc,width=10)
+        palletLocLabel = ttk.Label(pipFrame, text="Location:", font=self.bold_font)
+        palletLocDisplay = ttk.Label(pipFrame, textvariable=palletLoc, width=10, font=self.bold_font)
         palletItemIDLabel = ttk.Label(pipFrame, text="DPCI:")
         palletItemIDDisplay = ttk.Label(pipFrame, textvariable=palletItemID, width=11)
         palletItemNameLabel = ttk.Label(pipFrame, text="Item Name:")
@@ -48,6 +49,7 @@ class WarehouseWorkerGUI():
         altIDEntry = ttk.Entry(pipFrame, textvariable=altID, width=8)
         pullQuantityLabel = ttk.Label(pipFrame, text="Pull Quantity:")
         pullQuantityDisplay = ttk.Label(pipFrame, textvariable=pullQuantity, width=3)
+        pullStatusLabel = ttk.Label(pipFrame, textvariable=pullStatus, anchor="center", font=self.bold_font)
     # Grid all the Widgets for the Tab
         pullModeLabel.grid(column=0, row=0, pady=10, sticky="e")
         pullModeEntry.grid(column=1, row=0, padx=(0, 20), pady=10, sticky="w")
@@ -69,19 +71,39 @@ class WarehouseWorkerGUI():
         altIDEntry.grid(column=1, columnspan=2, row=4, pady=(0,10), sticky="w")
         pullQuantityLabel.grid(column=4, row=4, pady=(0,10), sticky="e")
         pullQuantityDisplay.grid(column=5, row=4, pady=(0,10), sticky="w")
+        pullStatusLabel.grid(column=0, columnspan=6, row=5, pady=10, sticky="nsew")
 
         def pip_scan_label_ID(event=None):
-            palletLoc.set("300-001-01")
-            palletItemID.set("100-10-1000")
-            palletItemName.set("Huggies Diapers Size 4 - 60 CT")
-            palletStatus.set("Pull Pending")
-            palletQuantity.set(50)
-            pullQuantity.set(10)
+            label = labelID.get()
+            pullCode = pullMode.get()
+            validate = val.PullCode(pullCode)
+            if validate:
+                validate = val.LabelID(label)
+                if not validate:
+                    pullStatus.set("Error!  Invalid Label!")
+                else:
+                    palletLoc.set("300-001-01")
+                    palletItemID.set("100-10-1000")
+                    palletItemName.set("Huggies Diapers Size 4 - 60 CT")
+                    palletStatus.set("Pull Pending")
+                    pullStatus.set("Scan Pallet ID or   Alternate ID")
+                    palletQuantity.set(50)
+                    pullQuantity.set(10)
+            else:
+                pullStatus.set("Error! Invalid Pull Code!")
 
         def pip_scan_pallet_ID(event=None):
-            palletQuantity.set(40)
-            palletStatus.set("Stored")
-            pullQuantity.set(0)
+            PID = palletID.get()
+            validate = val.PID(PID)
+            if not validate:
+                pullStatus.set("Error!  Invalid Pallet ID!")
+            else:
+                palletQuantity.set(40)
+                palletStatus.set("Stored")
+                pullStatus.set("Pull Successful!")
+                pullQuantity.set(0)
+                labelID.set("")
+                palletID.set("")
 
         labelIDEntry.bind("<Return>", pip_scan_label_ID)
         palletIDEntry.bind("<Return>", pip_scan_pallet_ID)
@@ -103,30 +125,53 @@ class WarehouseWorkerGUI():
         palletItemName = tk.StringVar()
         palletItemQuantity = tk.IntVar()
         displayMessage = tk.StringVar()
+        putInProgress = tk.BooleanVar()
         
         def cancelPut(event=None):
-            # This will un-assign the location from the pallet before it is put.
-            messagebox.showinfo("Success", "You pressed the Cancel Put Button")
+            if putInProgress.get():
+                assignedLoc.set("")
+                putInProgress.set(False)
+                displayMessage.set("Put Canceled!")
+            else:
+                displayMessage.set("Error, no put selected")
+            
 
         def assignLocation(event=None):
             # This function will check the overrides
             # Then set the pallet Size and Storage Code to the pallet ID.
             # It will also look for a location in the override zone FIRST, then start at zone 1.
-            palletItemID.set("100-10-1000")
-            palletItemQuantity.set(90)
-            palletItemName.set("Huggies Diapers Size 4 - 60 CT")
-            assignedLoc.set("300-001-01")
-            palletStatus.set("Put Pending")
-            palletLoc.set("")
-            displayMessage.set("Awating Put Confirmation")
+            if not putInProgress.get():
+                if val.PID(palletID.get()):
+                    if val.Aisle(aisle.get()):
+                        palletItemID.set("100-10-1000")
+                        palletItemQuantity.set(90)
+                        palletItemName.set("Huggies Diapers Size 4 - 60 CT")
+                        assignedLoc.set("300-001-01")
+                        palletStatus.set("Put Pending")
+                        palletLoc.set("")
+                        displayMessage.set("Awating Put Confirmation")
+                        putInProgress.set(True)
+                    else:
+                        displayMessage.set("Invalid Aisle")
+                else:
+                    displayMessage.set("Invalid Pallet ID")
+            else:
+                displayMessage.set("Put in Progress, complete put.")
 
         def completePut(event=None):
             # This will assign the PID to the assigned location.
-            locationID.set("")
-            palletStatus.set("Stored")
-            palletLoc.set("300-001-01")
-            assignedLoc.set("")
-            displayMessage.set("Put Successful!")
+            if putInProgress.get():
+                if locationID.get() == assignedLoc.get().replace("-", ""):
+                    locationID.set("")
+                    palletStatus.set("Stored")
+                    palletLoc.set("300-001-01")
+                    assignedLoc.set("")
+                    displayMessage.set("Put Successful!")
+                    putInProgress.set(False)
+                else:
+                    displayMessage.set("Wrong Location!")
+            else:
+                displayMessage.set("No Put Selected!")
 
     # Configure the Frame so it is centered in the tab
         centerWrapper = ttk.Frame(self.sdpTab)
@@ -176,13 +221,13 @@ class WarehouseWorkerGUI():
         palletIDLabel.grid(column=1, row=2, pady=10, sticky="e")
         palletIDEntry.grid(column=2, row=2, columnspan=2, pady=10, sticky="w")
         assignedLocationLabel.grid(column=3, row=2, pady=10, padx=(10,0), sticky="e")
-        assignedLocationDisplay.grid(column=4, row=2, pady=10, sticky="w")        
+        assignedLocationDisplay.grid(column=4, row=2, pady=10, sticky="w")   
         palletItemIDLabel.grid(column=1, row=3, pady=10, sticky="e")
         palletItemIDDisplay.grid(column=2, row=3, pady=10, sticky="w")
         palletItemQuantityLabel.grid(column=3, row=3, pady=10, padx=(10,0), sticky="e")
-        palletItemQuantityDisplay.grid(column=4, row=3, pady=10, sticky="w")
+        palletItemQuantityDisplay.grid(column=4, row=3, pady=10, sticky="w")        
         palletItemNameLabel.grid(column=0, row=4, pady=10, sticky="e")
-        palletItemNameDisplay.grid(column=1, row=4, columnspan=5, pady=10, sticky="w")
+        palletItemNameDisplay.grid(column=1, row=4, columnspan=5, pady=10, sticky="w")             
         locationIDLabel.grid(column=2, row=5, pady=10, sticky="e")
         locationIDEntry.grid(column=3, row=5, pady=10, sticky="w")
         palletStatusLabel.grid(column=0, row=6, pady=10, sticky="e")
@@ -213,23 +258,34 @@ class WarehouseWorkerGUI():
             # This function will check the overrides
             # Then set the pallet Size and Storage Code to the pallet ID.
             # It will also look for a location in the override zone FIRST, then start at zone 1.
-            palletItemID.set("100-10-1000")
-            palletItemQuantity.set(90)
-            palletItemName.set("Huggies Diapers Size 4 - 60 CT")
-            palletStatus.set("STORED")
-            palletLoc.set("300-001-01")
-            displayMessage.set("Pallet Selected")
-            palletStorageCode.set("CR")
-            palletSize.set("L")
+            if val.PID(palletID.get()):
+                palletItemID.set("100-10-1000")
+                palletItemQuantity.set(90)
+                palletItemName.set("Huggies Diapers Size 4 - 60 CT")
+                palletStatus.set("STORED")
+                palletLoc.set("300-001-01")
+                displayMessage.set("Pallet Selected")
+                palletStorageCode.set("CR")
+                palletSize.set("L")
+            else:
+                displayMessage.set("Invalid Pallet ID!")
+            
 
         def completePut(event=None):
             # This will assign the PID to the assigned location.
             loc = locationID.get()
             oldLoc = palletLoc.get()
-            locationID.set("")
-            palletLoc.set(f"{loc[:3]}-{loc[3:6]}-{loc[6:]}")
-            palletStatus.set("Stored")
-            displayMessage.set(f"Pallet Moved from {oldLoc}")
+            locFormat = f"{loc[:3]}-{loc[3:6]}-{loc[6:]}"
+            if val.Location(loc):
+                if locFormat != oldLoc:
+                    locationID.set("")
+                    palletLoc.set(locFormat)
+                    palletStatus.set("Stored")
+                    displayMessage.set(f"Pallet Moved from {oldLoc}")
+                else:
+                    displayMessage.set(f"Pallet already stored in {oldLoc}")
+            else:
+                displayMessage.set("Invalid Location!")
 
     # Configure the Frame so it is centered in the tab
         centerWrapper = ttk.Frame(self.mdpTab)
@@ -239,7 +295,7 @@ class WarehouseWorkerGUI():
         centerWrapper.columnconfigure(0, weight=1)
         centerWrapper.rowconfigure(0, weight=1)
 
-    # Create Widgets for the SDP Tab
+    # Create Widgets for the MDP Tab
         palletIDLabel = ttk.Label(mdpFrame, text="Scan Pallet ID", font=self.bold_font)
         palletIDEntry = ttk.Entry(mdpFrame, textvariable=palletID, width=8, font=self.bold_font)
         palletItemIDLabel = ttk.Label(mdpFrame, text="DPCI:")
@@ -269,14 +325,14 @@ class WarehouseWorkerGUI():
         palletItemQuantityDisplay.grid(column=3, row=1, pady=10, sticky="w")
         palletStorageCodeLabel.grid(column=4, row=1, pady=10, padx=(10,0), sticky="e")
         palletStorageCodeDisplay.grid(column=5, row=1, pady=10, sticky="w")
-        palletStatusLabel.grid(column=0, row=2, pady=10, sticky="e")
-        palletStatusDisplay.grid(column=1, row=2, pady=10, sticky="w")
-        palletLocationLabel.grid(column=2, row=2, pady=10, padx=(10,0), sticky="e")
-        palletLocationDisplay.grid(column=3, row=2, pady=10, sticky="w")
-        palletSizeLabel.grid(column=4, row=2, pady=10, padx=(10,0), sticky="e")
-        palletSizeDisplay.grid(column=5, row=2, pady=10, sticky="w")
-        palletItemNameLabel.grid(column=0, row=3, pady=10, sticky="e")
-        palletItemNameDisplay.grid(column=1, row=3, columnspan=5, pady=10, sticky="w")
+        palletItemNameLabel.grid(column=0, row=2, pady=10, sticky="e")
+        palletItemNameDisplay.grid(column=1, row=2, columnspan=5, pady=10, sticky="w")
+        palletStatusLabel.grid(column=0, row=3, pady=10, sticky="e")
+        palletStatusDisplay.grid(column=1, row=3, pady=10, sticky="w")
+        palletLocationLabel.grid(column=2, row=3, pady=10, padx=(10,0), sticky="e")
+        palletLocationDisplay.grid(column=3, row=3, pady=10, sticky="w")
+        palletSizeLabel.grid(column=4, row=3, pady=10, padx=(10,0), sticky="e")
+        palletSizeDisplay.grid(column=5, row=3, pady=10, sticky="w")
         locationIDLabel.grid(column=2, row=4, pady=10, sticky="e")
         locationIDEntry.grid(column=3, row=4, pady=10, sticky="w")
         displayMessageLabel.grid(column=0, row=5, columnspan=7, sticky="ew")
