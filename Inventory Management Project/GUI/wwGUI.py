@@ -3,6 +3,7 @@
 import tkinter as tk
 from tkinter import messagebox, ttk, font
 import logic.validators as val
+import logic.functions as func
 
 class WarehouseWorkerGUI():
 # Create the PIP Tab
@@ -89,13 +90,12 @@ class WarehouseWorkerGUI():
                     pullStatus.set("Scan Pallet ID or   Alternate ID")
                     palletQuantity.set(50)
                     pullQuantity.set(10)
+                    palletIDEntry.focus_set()
             else:
                 pullStatus.set("Error! Invalid Pull Code!")
 
         def pip_scan_pallet_ID(event=None):
-            PID = palletID.get()
-            validate = val.PID(PID)
-            if not validate:
+            if not val.PID(palletID.get()):
                 pullStatus.set("Error!  Invalid Pallet ID!")
             else:
                 palletQuantity.set(40)
@@ -104,10 +104,28 @@ class WarehouseWorkerGUI():
                 pullQuantity.set(0)
                 labelID.set("")
                 palletID.set("")
+                altID.set("")
+                labelIDEntry.focus_set()
+        
+        def pip_scan_alt_ID(event=None):
+            if val.Location(altID.get()):
+                if altID.get() == palletLoc.get().replace("-",""):
+                    palletQuantity.set(40)
+                    palletStatus.set("Stored")
+                    pullStatus.set("Pull Successful!")
+                    pullQuantity.set(0)
+                    labelID.set("")
+                    palletID.set("")
+                    altID.set("")
+                    labelIDEntry.focus_set()
+                else:
+                    pullStatus.set("Error!  Wrong Location!")
+            else:
+                pullStatus.set("Error!  Invalid Location!")                
 
         labelIDEntry.bind("<Return>", pip_scan_label_ID)
         palletIDEntry.bind("<Return>", pip_scan_pallet_ID)
-        altIDEntry.bind("<Return>", pip_scan_pallet_ID)
+        altIDEntry.bind("<Return>", pip_scan_alt_ID)
 
 # Create the SDP Tab
     def buildSDP(self):
@@ -151,6 +169,7 @@ class WarehouseWorkerGUI():
                         palletLoc.set("")
                         displayMessage.set("Awating Put Confirmation")
                         putInProgress.set(True)
+                        locationIDEntry.focus_set()
                     else:
                         displayMessage.set("Invalid Aisle")
                 else:
@@ -168,6 +187,7 @@ class WarehouseWorkerGUI():
                     assignedLoc.set("")
                     displayMessage.set("Put Successful!")
                     putInProgress.set(False)
+                    palletIDEntry.focus_set()
                 else:
                     displayMessage.set("Wrong Location!")
             else:
@@ -236,6 +256,9 @@ class WarehouseWorkerGUI():
         palletLocationDisplay.grid(column=3, row=6, pady=10, sticky="w")
         cancelPutButton.grid(column=4, columnspan=2, row=6, pady=10, padx=(10,0))
         displayMessageLabel.grid(column=0, columnspan=7, row=7, pady=10, sticky="ew")
+
+        func.LimitRefocus(aisle, palletIDEntry, 3)
+        func.BindNextFocus(putAisleEntry, palletIDEntry)
 
         palletIDEntry.bind("<Return>", assignLocation)
         locationIDEntry.bind("<Return>", completePut)
