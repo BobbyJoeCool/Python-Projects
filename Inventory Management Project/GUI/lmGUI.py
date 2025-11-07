@@ -3,6 +3,7 @@
 import tkinter as tk
 from tkinter import messagebox, ttk, font
 import logic.validators as val
+import logic.functions as func
 
 class LocationManagerGUI():
 
@@ -169,7 +170,8 @@ class LocationManagerGUI():
         tabText = event.widget.tab(selectedTab, "text")
 
         if tabText == "Empty Location by Zone":
-            self.findAisle()
+            if val.Aisle(self.aisle.get()) and val.StorageCode(self.storageCode.get()):
+                self.findAisle()
 
 # Create the WLI Tab
     def buildWLI(self):
@@ -177,18 +179,17 @@ class LocationManagerGUI():
         dept = tk.StringVar()
         cls = tk.StringVar()
         item = tk.StringVar()
-        itemID = tk.StringVar()
         storageCode = tk.StringVar()
         size = tk.StringVar()
         aisle = tk.StringVar()
         bin = tk.StringVar()
         level = tk.StringVar()
-        locationID = tk.StringVar()
         zone = tk.StringVar()
         PID = tk.StringVar()
         status = tk.StringVar()
         itemName = tk.StringVar()
         cartonCount = tk.StringVar()
+        displayMessage = tk.StringVar()
 
         # Configure the Frame so it is centered in the tab
         centerWrapper = ttk.Frame(self.wliTab)
@@ -199,12 +200,13 @@ class LocationManagerGUI():
         centerWrapper.rowconfigure(0, weight=1)
 
         # Create Widgets for WLI
-        locationLabel = ttk.Label(wliFrame, text="Location:")
-        aisleEntry = ttk.Entry(wliFrame, textvariable=aisle)
-        separaterLabel1 = ttk.Label(wliFrame, text="-")
-        binEntry = ttk.Label(wliFrame, textvariable=bin)
-        separaterLabel2 = ttk.Label(wliFrame, text="-")
-        levelEntry = ttk.Entry(wliFrame, textvariable=level)
+        entryFrame = ttk.Frame(wliFrame)
+        locationLabel = ttk.Label(entryFrame, text="Location:")
+        aisleEntry = ttk.Entry(entryFrame, textvariable=aisle, width=3)
+        separaterLabel1 = ttk.Label(entryFrame, text="-")
+        binEntry = ttk.Entry(entryFrame, textvariable=bin, width=3)
+        separaterLabel2 = ttk.Label(entryFrame, text="-")
+        levelEntry = ttk.Entry(entryFrame, textvariable=level, width=2)
         storageLabel = ttk.Label(wliFrame, text="Storage Code:")
         storageDisplay = ttk.Label(wliFrame, textvariable=storageCode)
         sizeLabel = ttk.Label(wliFrame, text="Size:")
@@ -215,20 +217,75 @@ class LocationManagerGUI():
         pidDisplay = ttk.Label(wliFrame, textvariable=PID)
         locationStatusLabel = ttk.Label(wliFrame, text="Location Status")
         locationStatusDisplay = ttk.Label(wliFrame, textvariable=status)
-        itemIDLabel = ttk.Label(wliFrame, text="DPCI:")
-        deptDisplay = ttk.Label(wliFrame, textvariable=dept)
-        separaterLabel3 = ttk.Label(wliFrame, text="-")
-        classDisplay = ttk.Label(wliFrame, textvariable=cls)        
-        separaterLabel4 = ttk.Label(wliFrame, text="-")
-        itemDisplay = ttk.Label(wliFrame, textvariable=item)        
+        itemIDFrame = ttk.Frame(wliFrame)
+        itemIDLabel = ttk.Label(itemIDFrame, text="DPCI:")
+        deptDisplay = ttk.Label(itemIDFrame, textvariable=dept)
+        separaterLabel3 = ttk.Label(itemIDFrame, text="-")
+        classDisplay = ttk.Label(itemIDFrame, textvariable=cls)        
+        separaterLabel4 = ttk.Label(itemIDFrame, text="-")
+        itemDisplay = ttk.Label(itemIDFrame, textvariable=item)        
         itemNameLabel = ttk.Label(wliFrame, text="Item Name:")
         itemNameDisplay = ttk.Label(wliFrame, textvariable=itemName)
         cartonCountLabel = ttk.Label(wliFrame, text="Carton Count:")
         cartonCountDisplay = ttk.Label(wliFrame, textvariable=cartonCount)
+        displayMessageDisplay = ttk.Label(wliFrame, textvariable=displayMessage, font=self.bold_font)
         
         # Grid Widgets for WLI
-
+        entryFrame.grid(column=0, columnspan=4, row=0, pady=10)
+        locationLabel.pack(side="left")
+        aisleEntry.pack(side="left")
+        separaterLabel1.pack(side="left")
+        binEntry.pack(side="left")
+        separaterLabel2.pack(side="left")
+        levelEntry.pack(side="left")
+        pidLabel.grid(column=4, row=0, pady=10, padx=(10,0))
+        pidDisplay.grid(column=5, row=0, pady=10)
+        storageLabel.grid(column=0, row=1, pady=10, padx=(10,0))
+        storageDisplay.grid(column=1, row=1, pady=10)
+        sizeLabel.grid(column=2, row=1, pady=10, padx=(10,0))
+        sizeDisplay.grid(column=3, row=1, pady=10)
+        zoneLabel.grid(column=4, row=1, pady=10, padx=(10,0))
+        zoneDisplay.grid(column=5, row=1, pady=10)
+        cartonCountLabel.grid(column=0, row=2, pady=10)
+        cartonCountDisplay.grid(column=1, row=2, pady=10)
+        itemIDFrame.grid(column=2, columnspan=4, row=2, pady=10, padx=(10,0))
+        itemIDLabel.pack(side="left")
+        deptDisplay.pack(side="left")
+        separaterLabel3.pack(side="left")
+        classDisplay.pack(side="left")
+        separaterLabel4.pack(side="left")
+        itemDisplay.pack(side="left")
+        itemNameLabel.grid(column=0, columnspan=2, row=3, pady=10)
+        itemNameDisplay.grid(column=2, columnspan=4, row=3, pady=10)
+        locationStatusLabel.grid(column=0, row=4, pady=10)
+        locationStatusDisplay.grid(column=1, row=4, pady=10)
+        displayMessageDisplay.grid(column=2, columnspan=4, row=4, pady=10, padx=(20,0))
+        
         # WLI Functions
+        def findLocation(self, aisle, bin, level, event=None):
+            location = aisle + bin + level
+            if val.Location(location):
+                dept.set("100")
+                cls.set("10")
+                item.set("1000")
+                storageCode.set("CR")
+                status.set("Stored")
+                size.set("L")
+                zone.set("3")
+                PID.set("12345678")
+                itemName.set("Huggies Diapers Size 4 - 60 CT")
+                cartonCount.set("90")
+                displayMessage.set("")
+            else:
+                displayMessage.set("Invalid Location")
+
+        aisleEntry.bind("<Return>", lambda event: findLocation(self, aisle.get(), bin.get(), level.get(), event))
+        binEntry.bind("<Return>", lambda event: findLocation(self, aisle.get(), bin.get(), level.get(), event))
+        levelEntry.bind("<Return>", lambda event: findLocation(self, aisle.get(), bin.get(), level.get(), event))
+        func.LimitRefocus(aisle, bin, 3)
+        func.LimitRefocus(bin, level, 3)
+        func.LimitRefocus(level, aisle, 2)
+                
 
 # Create the ISI Tab
 
@@ -261,3 +318,4 @@ class LocationManagerGUI():
 
         self.buildELA()
         self.buildELZ()
+        self.buildWLI()

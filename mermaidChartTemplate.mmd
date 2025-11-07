@@ -1,0 +1,29 @@
+flowchart TD
+    %% --- Node Definitions ---
+    Start((Start)):::terminatorStart 
+    Process[Process]:::process
+    InputOutput[/Input/Output/]:::inputOutput
+    Decision{Decision}:::decision
+    Database[(Database)]:::database
+    End((End)):::terminatorFinish
+
+    %% --- Node Connections ---
+    Start --> Process
+    Process --> Decision
+    Decision -- Yes --> InputOutput
+    Decision -- No --> Database
+    InputOutput --> End
+    Database --> End
+
+    %% --- Class Definitions ---
+    %% Process Rectangle: Blue (white text)
+    classDef process fill:#0066cc,stroke:#333,color:#fff;
+    %% Decision Diamond: Orange (White Text)
+    classDef decision fill:#ff9900,stroke:#333,color:#fff;
+    %% Database Can: Yellow (Black Text)
+    classDef database fill:#ffeb3b,stroke:#333,color:#000;
+    %% Input/Output Parallelagram: Purple (White Text)
+    classDef inputOutput fill:#9933cc,stroke:#333,color:#fff;
+    %% Terminator Circle: Green for Start, Red for Finish (White Text)
+    classDef terminatorStart fill:#4CAF50,stroke:#333,color:#fff;
+    classDef terminatorFinish fill:#F44336,stroke:#333,color:#fff;
