@@ -1,0 +1,81 @@
+# ---------Validation Functions----------
+import sqlite3
+
+dbPATH = "IMS/database/database.db"
+
+def getConn():
+    db = sqlite3.connect(dbPATH)
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    return db, cur
+
+def splitLocation(location):
+    if len(location) != 8:
+        return None 
+    
+    aisle = location[:3]
+    bin = location[3:6]
+    level = location[6:]
+    return aisle, bin, level
+
+def PID(pid):
+    db, cur = getConn()
+    cur.execute("SELECT 1 FROM pallet WHERE PalletID = ?", (pid,))
+    exists = cur.fetchone()
+    db.close()
+    return bool(exists)
+        
+def LabelID(labelID):
+    if labelID != "":
+        return True
+    else:
+        return False
+        
+def Aisle(aisle):
+    db, cur = getConn()
+    cur.execute("SELECT 1 FROM locations WHERE Aisle = ?", (aisle,))
+    exists = cur.fetchone()
+    db.close()
+    return bool(exists)
+    
+def LocationExists(location):
+    result = splitLocation(location)
+    if result is None:
+        return False
+
+    aisle, bin, level = result
+    db, cur = getConn()
+    cur.execute("SELECT 1 FROM locations WHERE Aisle=? AND Bin=? AND Level=?", (aisle, bin, level))
+    exists = cur.fetchone() is not None
+    db.close()
+    return bool(exists)
+
+def LocationEmpty(location):
+    exists = LocationExists(location)
+    if exists:
+        aisle, bin, level = splitLocation(location)
+        db, cur = getConn()
+        cur.execute("SELECT Status FROM locations WHERE Aisle=? AND Bin=? AND Level=?", (aisle, bin, level))
+        result = cur.fetchone()
+        db.close()
+        return result == "Empty"
+    
+def PullCode(pullCode):
+    if pullCode.upper() in ("CA", "FP", "BK"):
+        return True
+    else:
+        return False
+    
+def StorageCode(storageCode):
+    db, cur = getConn()
+    cur.execute()
+    cur.execute("SELECT 1 FROM storageCode WHERE StorageCode = ?", (storageCode,))
+    exists = cur.fetchone()
+    db.close()
+    return bool(exists)
+    
+def Size(size):
+    if size.upper() in ("HS", "S", "M", "L"):
+        return True
+    else:
+        return False

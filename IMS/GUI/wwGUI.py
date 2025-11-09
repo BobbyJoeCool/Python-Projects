@@ -299,7 +299,7 @@ class WarehouseWorkerGUI():
             loc = locationID.get()
             oldLoc = palletLoc.get()
             locFormat = f"{loc[:3]}-{loc[3:6]}-{loc[6:]}"
-            if val.Location(loc):
+            if val.LocationExists(loc):
                 if locFormat != oldLoc:
                     locationID.set("")
                     palletLoc.set(locFormat)
