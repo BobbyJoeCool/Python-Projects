@@ -61,9 +61,8 @@ def PIDgetStatus(PID):
     db.close()
     return row[0] if row else None
 
-def LocGetPallet(location):
+def LocGetPallet(aisle, bin, level):
     # Returns Pallet Information if stored in a location as dict.
-    aisle, bin, level = val.splitLocation(location)    
     db, cur = getConn()
     cur.execute("SELECT * FROM pallet WHERE Aisle = ? AND Bin = ? AND Level = ?", (aisle, bin, level))
     row = cur.fetchone()

@@ -16,3 +16,21 @@ def BindNextFocus(entry: tk.Widget, nextWidget: tk.Widget):
         nextWidget.focus_set()
         return "break"
     entry.bind("<Tab>", _callback)
+
+def splitLocation(location):
+    if len(location) != 8:
+        return None 
+    
+    aisle = location[:3]
+    bin = location[3:6]
+    level = location[6:]
+    return aisle, bin, level
+
+def splitDPCI(DPCI):
+    if not (len(DPCI) == 9 and DPCI.isdigit()):
+        return None
+    
+    dept = DPCI[:3]
+    cls = DPCI[3:5]
+    item = DPCI[5:]
+    return dept, cls, item

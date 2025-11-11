@@ -9,15 +9,6 @@ def getConn():
     cur = db.cursor()
     return db, cur
 
-def splitLocation(location):
-    if len(location) != 8:
-        return None 
-    
-    aisle = location[:3]
-    bin = location[3:6]
-    level = location[6:]
-    return aisle, bin, level
-
 def PID(pid):
     db, cur = getConn()
     cur.execute("SELECT 1 FROM pallet WHERE PalletID = ?", (pid,))
@@ -38,24 +29,18 @@ def Aisle(aisle):
     db.close()
     return bool(exists)
     
-def LocationExists(location):
-    result = splitLocation(location)
-    if result is None:
-        return False
-
-    aisle, bin, level = result
+def LocationExists(aisle, bin, level):
     db, cur = getConn()
-    cur.execute("SELECT 1 FROM locations WHERE Aisle=? AND Bin=? AND Level=?", (aisle, bin, level))
+    cur.execute("SELECT 1 FROM locations WHERE Aisle = ? AND Bin = ? AND Level = ?", (aisle, bin, level))
     exists = cur.fetchone() is not None
     db.close()
     return bool(exists)
 
-def LocationEmpty(location):
-    exists = LocationExists(location)
+def LocationEmpty(aisle, bin, level):
+    exists = LocationExists(aisle, bin, level)
     if exists:
-        aisle, bin, level = splitLocation(location)
         db, cur = getConn()
-        cur.execute("SELECT Status FROM locations WHERE Aisle=? AND Bin=? AND Level=?", (aisle, bin, level))
+        cur.execute("SELECT Status FROM locations WHERE Aisle = ? AND Bin = ? AND Level = ?", (aisle, bin, level))
         result = cur.fetchone()
         db.close()
         return result == "Empty"

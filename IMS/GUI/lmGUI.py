@@ -264,10 +264,9 @@ class LocationManagerGUI():
         
         # WLI Functions
         def findLocation(self, aisle, bin, level, event=None):
-            location = aisle + bin + level
-            if val.LocationExists(location):
-                locationInfo = getData.GetLocationInfo(location)
-                palletInfo = getData.LocGetPallet(location)
+            if val.LocationExists(aisle, bin, level):
+                locationInfo = getData.GetLocationInfo(aisle, bin, level)
+                palletInfo = getData.LocGetPallet(aisle, bin, level)
                 status.set(locationInfo["Status"])
                 size.set(locationInfo["Size"])
                 zone.set(locationInfo["Zone"])

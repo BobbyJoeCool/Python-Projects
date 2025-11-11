@@ -108,20 +108,26 @@ class WarehouseWorkerGUI():
                 labelIDEntry.focus_set()
         
         def pip_scan_alt_ID(event=None):
-            if val.LocationExists(altID.get()):
-                if altID.get() == palletLoc.get().replace("-",""):
-                    palletQuantity.set(40)
-                    palletStatus.set("Stored")
-                    pullStatus.set("Pull Successful!")
-                    pullQuantity.set(0)
-                    labelID.set("")
-                    palletID.set("")
-                    altID.set("")
-                    labelIDEntry.focus_set()
+            loc = altID.get()
+            splitlocation = func.splitLocation(loc)
+            if splitlocation:
+                aisle1, bin1, level1 = splitlocation
+                if val.LocationExists(aisle1, bin1, level1):
+                    if altID.get() == palletLoc.get().replace("-",""):
+                        palletQuantity.set(40)
+                        palletStatus.set("Stored")
+                        pullStatus.set("Pull Successful!")
+                        pullQuantity.set(0)
+                        labelID.set("")
+                        palletID.set("")
+                        altID.set("")
+                        labelIDEntry.focus_set()
+                    else:
+                        pullStatus.set("Error!  Wrong Location!")
                 else:
-                    pullStatus.set("Error!  Wrong Location!")
+                    pullStatus.set("Error!  Invalid Location!")         
             else:
-                pullStatus.set("Error!  Invalid Location!")                
+                pullStatus.set("Error!  Invalid Location!")          
 
         labelIDEntry.bind("<Return>", pip_scan_label_ID)
         palletIDEntry.bind("<Return>", pip_scan_pallet_ID)
@@ -297,9 +303,16 @@ class WarehouseWorkerGUI():
         def completePut(event=None):
             # This will assign the PID to the assigned location.
             loc = locationID.get()
+            splitlocation = func.splitLocation(loc)
+            if splitlocation:
+                aisle1, bin1, level1 = splitlocation
+            else:
+                displayMessage.set("Invalid Location!")
+                return
+            
             oldLoc = palletLoc.get()
             locFormat = f"{loc[:3]}-{loc[3:6]}-{loc[6:]}"
-            if val.LocationExists(loc):
+            if val.LocationExists(aisle1, bin1, level1):
                 if locFormat != oldLoc:
                     locationID.set("")
                     palletLoc.set(locFormat)
