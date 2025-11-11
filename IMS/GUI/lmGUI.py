@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk, font
 import logic.validators as val
 import logic.functions as func
+import database.getData as getData
 
 class LocationManagerGUI():
 
@@ -264,27 +265,39 @@ class LocationManagerGUI():
         # WLI Functions
         def findLocation(self, aisle, bin, level, event=None):
             location = aisle + bin + level
-            if val.Location(location):
-                dept.set("100")
-                cls.set("10")
-                item.set("1000")
-                storageCode.set("CR")
-                status.set("Stored")
-                size.set("L")
-                zone.set("3")
-                PID.set("12345678")
-                itemName.set("Huggies Diapers Size 4 - 60 CT")
-                cartonCount.set("90")
-                displayMessage.set("")
+            if val.LocationExists(location):
+                locationInfo = getData.GetLocationInfo(location)
+                palletInfo = getData.LocGetPallet(location)
+                status.set(locationInfo["Status"])
+                size.set(locationInfo["Size"])
+                zone.set(locationInfo["Zone"])
+                storageCode.set(locationInfo["StorageCode"])     
+                if palletInfo:
+                    name = getData.DPCIgetName(palletInfo["Dept"], palletInfo["Class"], palletInfo["Item"])
+                    dept.set(palletInfo["Dept"])
+                    cls.set(palletInfo["Class"])
+                    item.set(palletInfo["Item"])
+                    status.set(palletInfo["Status"])
+                    PID.set(palletInfo["PalletID"])
+                    itemName.set(name)
+                    cartonCount.set(palletInfo["Quantity"])
+                else:
+                    dept.set("")
+                    cls.set("")
+                    item.set("")
+                    PID.set("")
+                    itemName.set("")
+                    cartonCount.set("")
+                    displayMessage.set("")
             else:
                 displayMessage.set("Invalid Location")
 
         aisleEntry.bind("<Return>", lambda event: findLocation(self, aisle.get(), bin.get(), level.get(), event))
         binEntry.bind("<Return>", lambda event: findLocation(self, aisle.get(), bin.get(), level.get(), event))
         levelEntry.bind("<Return>", lambda event: findLocation(self, aisle.get(), bin.get(), level.get(), event))
-        func.LimitRefocus(aisle, bin, 3)
-        func.LimitRefocus(bin, level, 3)
-        func.LimitRefocus(level, aisle, 2)
+        func.LimitRefocus(aisle, binEntry, 3)
+        func.LimitRefocus(bin, levelEntry, 3)
+        func.LimitRefocus(level, aisleEntry, 2)
                 
 
 # Create the ISI Tab

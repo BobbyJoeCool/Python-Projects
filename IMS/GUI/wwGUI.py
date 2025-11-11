@@ -108,7 +108,7 @@ class WarehouseWorkerGUI():
                 labelIDEntry.focus_set()
         
         def pip_scan_alt_ID(event=None):
-            if val.Location(altID.get()):
+            if val.LocationExists(altID.get()):
                 if altID.get() == palletLoc.get().replace("-",""):
                     palletQuantity.set(40)
                     palletStatus.set("Stored")

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from .wwGUI import WarehouseWorkerGUI
 from .lmGUI import LocationManagerGUI
+import logic.validators as val
 
 def clear_frame(frame):
     for widget in frame.winfo_children():
@@ -68,12 +69,17 @@ class BaseGUI():
         quitButton.pack(side="left", expand=True, fill="x", padx=2, pady=5)
 
     def login(self):
-        # verify username and ID function tbd
-        user = self.username.get()
-        messagebox.showinfo("Success", f"Welcome {user}!")
-        self.clear_frame(self.notebookFrame)
-        self.createButtons()
-        self.wwTab()
+        if val.UserID(self.username.get()):
+            success, user = val.Login(self.username.get(), self.password.get())
+            if success:
+                messagebox.showinfo("Success", f"Welcome {user}!")
+                self.clear_frame(self.notebookFrame)
+                self.createButtons()
+                self.wwTab()
+            else:
+                messagebox.showinfo("Error", "Incorrect Password")
+        else:
+            messagebox.showinfo("Error", "Invalid Username")
 
     def login_screen(self):
         usernameLabel = ttk.Label(self.notebookFrame, text="Username")

@@ -1,4 +1,5 @@
 import sqlite3
+import logic.validators as val
 
 # Database path
 dbPATH = "IMS/database/database.db"
@@ -59,6 +60,16 @@ def PIDgetStatus(PID):
     row = cur.fetchone()
     db.close()
     return row[0] if row else None
+
+def LocGetPallet(location):
+    # Returns Pallet Information if stored in a location as dict.
+    aisle, bin, level = val.splitLocation(location)    
+    db, cur = getConn()
+    cur.execute("SELECT * FROM pallet WHERE Aisle = ? AND Bin = ? AND Level = ?", (aisle, bin, level))
+    row = cur.fetchone()
+    db.close()
+    return dict(row) if row else None
+
 
 # ---------- Items Table Functions ----------
 def GetItemInfo(dept, cls, item):

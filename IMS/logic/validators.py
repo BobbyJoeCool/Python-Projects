@@ -68,7 +68,6 @@ def PullCode(pullCode):
     
 def StorageCode(storageCode):
     db, cur = getConn()
-    cur.execute()
     cur.execute("SELECT 1 FROM storageCode WHERE StorageCode = ?", (storageCode,))
     exists = cur.fetchone()
     db.close()
@@ -79,3 +78,20 @@ def Size(size):
         return True
     else:
         return False
+    
+def UserID(userID):
+    db, cur = getConn()
+    cur.execute("SELECT 1 FROM users WHERE UserID = ?", (userID,))
+    exists = cur.fetchone()
+    db.close()
+    return bool(exists)
+
+def Login(userID, password):
+    db, cur = getConn()
+    cur.execute("SELECT * from users WHERE userID = ?", (userID,))
+    result = cur.fetchone()
+    if not result:
+        return False
+    validLogin = password == result["Password"]
+    db.close()
+    return validLogin, result["UserName"]

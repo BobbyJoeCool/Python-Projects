@@ -7,7 +7,7 @@ import random
 from datetime import datetime
 import pandas as pd
 
-db_path = "IMS/database/database.db"
+db_path = "database/database.db"
 db = sqlite3.connect(db_path)
 cur = db.cursor()
 
@@ -360,6 +360,7 @@ def populate_pallets(fill_percent=0.9, created_by=1):
     # Get all empty locations
     cur.execute("SELECT * FROM locations WHERE Status='Empty'")
     locations = cur.fetchall()
+    random.shuffle(locations)
     total_locations = len(locations)
     target_fill = int(total_locations * fill_percent)
     filled = 0
@@ -516,7 +517,7 @@ def export_database_to_excel():
 # ---------- GUI SETUP ----------
 root = tk.Tk()
 root.title("Warehouse Database Manager")
-root.geometry("420x700")
+root.geometry("420x740")
 
 # Apply ttk theme for macOS (clam or aqua works well)
 style = ttk.Style()
