@@ -1,12 +1,19 @@
 flowchart TD
-%% --- Node Definitions and Connections ---
-Start((Start)):::terminatorStart --> p1[Import Libraries]:::process
-p1 --> d1{Bext Installed?}:::decision
-d1 -- No --> io1[/Display Error - Install Bext/]:::inputOutput
-io1 --> End((Exit)):::terminatorFinish
-d1 -- Yes --> p2[Set up constants]:::process
-p2 --> p3[Set up settings]:::process
-p3 ---> mainF((Main)):::terminatorStart
+%% --- Node Definitions ---
+Start((Beginning Terminator)):::terminatorStart;
+p1[Process Rectangle]:::process;
+d1{Decision Diamond}:::decision;
+io1[/Input Output Parallelogram/]:::inputOutput;
+db1[(Database Can)]:::database;
+End((Finish Terminator)):::terminatorFinish;
+
+%% --- None Connections ---
+Start --> p1;
+p1 --> d1;
+d1 -- yes --> io1;
+d1 -- no --> db1;
+io1 --> End;
+db1 --> End;
 
 %% --- Class Definitions ---
 %% Process Rectangle: Blue (white text)
@@ -18,7 +25,7 @@ classDef decision fill:#ff9900,stroke:#333,color:#fff;
 %% Database Can: Yellow (Black Text)
 classDef database fill:#ffeb3b,stroke:#333,color:#000;
 
-%% Input/Output Parallelagram: Purple (White Text)
+%% Input/Output Parallelogram: Purple (White Text)
 classDef inputOutput fill:#9933cc,stroke:#333,color:#fff;
 
 %% Terminator Circle: Green for Start, Red for Finish (White Text)
