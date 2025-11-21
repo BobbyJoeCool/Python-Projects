@@ -1,0 +1,45 @@
+flowchart TD
+%% --- Node Definitions ---
+Start((Start Program)):::terminatorStart;
+p1[Initialize Deck<br>- Create 52-card deck<br>- Shuffle deck]:::process;
+p2[Deal Initial Cards<br>- Player gets 2<br>- Dealer gets 2 one hidden]:::process;
+p3[Show Player Hand<br>Show Dealer Up-card]:::inputOutput;
+d1{Player Hit or Stand?}:::decision;
+p4[Deal Card to Player]:::process;
+p5[Update Player Total]:::process;
+d2{Player Busts?}:::decision;
+p6[Reveal Dealer Hand]:::inputOutput;
+d3{Dealer Total < 17?}:::decision;
+p7[Deal Card to Dealer]:::process;
+p8[Update Dealer Total]:::process;
+d4{Dealer Busts?}:::decision;
+p9[Compare Totals\nDetermine Winner]:::process;
+ioEnd[/Display Result/]:::inputOutput;
+d5{Play Again?}:::decision;
+End((End Program)):::terminatorFinish;
+
+%% --- Connections ---
+Start --> p1 --> p2 --> p3 --> d1;
+
+%% Player turn loop
+d1 -- "Hit" --> p4 --> p5 --> d2;
+d2 -- "Yes" --> ioEnd --> d5;
+d2 -- "No" --> d1;
+d1 -- "Stand" --> p6;
+
+%% Dealer turn loop
+p6 --> d3;
+d3 -- "Yes" --> p7 --> p8 --> d4;
+d4 -- "Yes" --> ioEnd --> d5;
+d4 -- "No" --> d3;
+d3 -- "No" --> p9 --> ioEnd --> d5;
+d5 -- "Yes" --> p1;
+d5 -- "No" --> End;
+
+%% --- Class Definitions ---
+classDef process fill:#0066cc,stroke:#333,color:#fff;
+classDef decision fill:#ff9900,stroke:#333,color:#fff;
+classDef database fill:#ffeb3b,stroke:#333,color:#000;
+classDef inputOutput fill:#9933cc,stroke:#333,color:#fff;
+classDef terminatorStart fill:#4CAF50,stroke:#333,color:#fff;
+classDef terminatorFinish fill:#F44336,stroke:#333,color:#fff;
