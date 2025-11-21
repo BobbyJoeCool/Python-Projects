@@ -1,10 +1,14 @@
 import game
 import classes
 
-print("")
-print("Welcome to BlackJack!")
-print("Programmed by Robert Breutzmann")
-print("as part of continued learning of Python.")
+print(""""
+Welcome to BlackJack!
+Programmed by Robert Breutzmann
+as part of continued learning of Python.
+      
+Dealer hits until they have 17.
+Dealer hits on soft 17
+""")
 
 playing = True
 deck = game.newDeck()
@@ -14,39 +18,52 @@ while playing == True:
     game.printHand(dealer, True)
     game.printHand(player)
     
-    playerTurn = True
-    dealerTurn = True
-    while playerTurn:
-        action = input("Hit or Stand?")
-        if action.lower() == "hit":
-            player.hand.addCard(deck.dealOne())
-            game.printHand(player)
-            if player.hand.value > 21:
-                print("You Busted!")
-                playerTurn = False
-                dealerTurn = False
-        else:
-            playerTurn = False
 
-    game.printHand(dealer)
+    if dealer.hand.blackjack():  # Check for Dealer Blackjack
+        game.printHand(dealer)
+        print("Sorry, Dealer has Blackjack!")
+        playerTurn = False
+        dealerTurn = False
+    else:
+        playerTurn = True
+        dealerTurn = True
+
+    while playerTurn:
+        if player.hand.blackjack(): # Check for Player Blackjack
+            print("BlackJack!")
+            playerTurn = False
+            dealerTurn = False
+        else:
+            action = input("Hit or Stand?")
+            if action.lower() == "hit":
+                player.hand.addCard(deck.dealOne())
+                game.printHand(player)
+                if player.hand.value > 21:
+                    playerTurn = False
+                    dealerTurn = False
+            else:
+                playerTurn = False
+
+    print("")
+
     while dealerTurn:
+        game.printHand(dealer)
         if dealer.hand.valueSoft is not None:
             if dealer.hand.value <= 17:
                 dealer.hand.addCard(deck.dealOne())
-                game.printHand(dealer)
+            else:
+                dealerTurn = False
         elif dealer.hand.value < 17:
             dealer.hand.addCard(deck.dealOne())
-            game.printHand(dealer)
         elif dealer.hand.value > 21:
-            print("Dealer Busts!")
             dealerTurn = False
         else:
             dealerTurn = False
 
+    game.whoWon(player, dealer)
+
     nextRound = input("Would you like to play again? (y/n): ")
     if nextRound.lower() == "y":
-        deck = game.newDeck()
-        game.newHand(dealer, player, deck)
         continue
     else:
         print("\nThanks for playing!  Goodbye!\n")

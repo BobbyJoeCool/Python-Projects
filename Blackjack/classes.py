@@ -82,6 +82,20 @@ class Hand:
     def getValue(self):
         return self.value, self.valueSoft
     
+    def blackjack(self):
+        value = 0
+        cards = 0
+        aces = 0
+        for card in self.cards:
+            value += card.value
+            cards += 1
+            if card.rank == "A":
+                value += 10
+        if value == 21 and cards == 2:
+            return True
+        else:
+            return False
+    
 class Player:
     def __init__(self, name="Player"):
         self.name = name
