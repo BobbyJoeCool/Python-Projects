@@ -1,7 +1,14 @@
 import classes
 
 def newDeck():
-    deck = classes.Deck(1)
+    while True:
+        decks = input("How many decks would you like to play with (enter a number 1-6? ")
+        if decks in ["1", "2", "3", "4", "5", "6"]:
+            break
+        else:
+            print("Please enter a valid number of decks for the shoe.")
+    
+    deck = classes.Deck(int(decks))
     return deck
 
 def newGame(deck):
