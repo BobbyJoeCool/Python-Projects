@@ -15,122 +15,51 @@ Expansion Goals:
 4) Add multiple decks for the shoe.
 5) Expand to allow for a Discard Pile and to reshuffle when the deck gets low
 
----
-
-## `card.py`
-
-**Purpose:**  
-Represents a single playing card.
-
-**Responsibilities:**
-
-- Store the card’s rank and suit.
-- Provide the card’s Blackjack value.
-- Format the card nicely (e.g., `"A♠"`).
-
-**Typical contents:**
-
-- `class Card`
-  - `rank`
-  - `suit`
-  - `value`
-  - `__str__()` for printing
 
 ---
 
-## `deck.py`
+Module Responsibilties
 
-**Purpose:**  
-Handles all deck operations.
+## main.py
 
-**Responsibilities:**
+Main Game Flow:
 
-- Create a standard 52-card deck.
-- Shuffle the deck.
-- Deal cards by removing them from the deck.
+- Start a new game
+- Make a new hand
+- Ask for Bet
+- Player Turn Logic
+- Dealer Turn Logic
+- Play Again?
 
-**Typical functions:**
+## classes.py
 
-- `create_deck()`
-- `shuffle_deck(deck)`
-- `deal_card(deck)`
+Holds all Class definitions:
 
----
+- Player Class
+  - name: Player Name
+  - hand: Holds Hand object
+  - chips: Holds player's money
 
-## `hand.py`
+- Card Class
+  - rank: A-K face of the card
+  - suit: Holds the suit of the card
+  - value: Holds the value of the card (A=1)
 
-**Purpose:**  
-Manages a player's or dealer's hand.
+- Hand Class
+  - owner: Who owns the hand
+  - cards: List of cards in the hand
+  - value: Combined Value of the cards in the hand
+  - valueSoft: None - Hold the value if a card is an Ace and the hand holds 2 possible values.
+  - Various functions to handle most of the fucntions for the game. (add card, remove card, updateValue, etc)
 
-**Responsibilities:**
+- Deck Class:
+  - Creates 1 of each of the 52 cards in the deck, then shuffles them, creating a list of cards.
+  - dealOne: "pops" the top card off the deck to give to a player.
 
-- Store the cards a player/dealer has.
-- Add new cards to the hand.
-- Calculate total value (including Ace soft/hard logic).
-- Display hand content when needed.
+  ## game.py
 
-**Typical contents:**
+  Holds all the game functions such as "newDeck" "newGame", "newHand".
 
-- `class Hand`
-  - `add_card()`
-  - `calculate_value()`
-  - `show_hand(hide_second=False)`
+  ## ui.py
 
----
-
-## `game.py`
-
-**Purpose:**  
-Implements the core Blackjack gameplay logic.
-
-**Responsibilities:**
-
-- Controls a full round of Blackjack.
-- Manages turn flow:
-  - Initial dealing
-  - Player turn (hit/stand loop)
-  - Dealer turn (draw until 17)
-- Determines round outcomes.
-- Keeps logic separate from user interface.
-
-**Typical functions:**
-
-- `play_round()`
-- `player_turn(deck, player_hand)`
-- `dealer_turn(deck, dealer_hand)`
-- `determine_winner(player_hand, dealer_hand)`
-
----
-
-## `ui.py`
-
-**Purpose:**  
-Handles user interaction and output formatting.
-
-**Responsibilities:**
-
-- Get user input (hit/stand).
-- Display hands and statuses.
-- Show round results.
-- Ask whether to play again.
-
-**Typical functions:**
-
-- `get_player_choice()`
-- `show_player_hand()`
-- `show_dealer_hand()`
-- `show_result()`
-- `ask_play_again()`
-
----
-
-## `main.py`
-
-**Purpose:**  
-Entry point of the program.
-
-**Responsibilities:**
-
-- Start the game.
-- Run rounds in a loop.
-- Handle the "play again" option.
+  Will hold all the UI information for the tkinter UI (in a GUI Class)

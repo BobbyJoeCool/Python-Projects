@@ -1,7 +1,7 @@
 import classes
 
 def newDeck():
-    deck = classes.Deck()
+    deck = classes.Deck(1)
     return deck
 
 def newGame(deck):

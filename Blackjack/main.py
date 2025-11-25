@@ -16,6 +16,8 @@ playing = True
 deck = game.newDeck()
 player, dealer = game.newGame(deck)
 while playing == True:
+    if len(deck.cards) < 15:
+        deck = game.newDeck()
     chips = int(player.chips)
     bet = int(game.getBet(player, chips))
     game.newHand(dealer, player, deck)

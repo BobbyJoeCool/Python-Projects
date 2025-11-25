@@ -10,16 +10,21 @@ class Card:
         return f"{self.rank}{self.suit}"
     
 class Deck:
-    def __init__(self):
+    def __init__(self, n):
         suits = ["♠", "♥", "♦", "♣"]
         ranks = {
             "A": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6,
             "7": 7, "8": 8, "9": 9, "10": 10,
             "J": 10, "Q": 10, "K": 10
         }
-
-        self.cards = [Card(rank, suit, ranks[rank]) for rank in ranks for suit in suits]
         
+        self.cards = [] 
+        i = 0
+        
+        while i < n:
+            self.cards += [Card(rank, suit, ranks[rank]) for rank in ranks for suit in suits]
+            i += 1
+
         random.shuffle(self.cards)
 
     def dealOne(self):
@@ -115,6 +120,6 @@ class Player:
     
 
 if __name__== "__main__":
-    deck = Deck()
-    for card in deck:
+    deck = Deck(1)
+    for card in deck.cards:
             print(card)
