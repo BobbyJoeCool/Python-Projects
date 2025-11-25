@@ -40,6 +40,14 @@ class Hand:
         self.cards.append(cards)
         self.updateValue()
 
+    def dealBlackjack(self):
+    # Force the hand to always be a blackjack for testing
+        self.cards = [
+            Card("A", "♠", 1),   # Ace
+            Card("K", "♥", 10)   # 10-value card
+        ]
+        self.updateValue()
+
     def removeCard(self, card):
         if card in self.cards:
             self.cards.remove(card)
@@ -100,6 +108,7 @@ class Player:
     def __init__(self, name="Player"):
         self.name = name
         self.hand = None
+        self.chips = None
 
     def newHand(self, hand):
         self.hand = hand

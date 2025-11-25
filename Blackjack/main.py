@@ -8,12 +8,16 @@ as part of continued learning of Python.
       
 Dealer hits until they have 17.
 Dealer hits on soft 17
+      
+Blackjack pays 1.5x the bet (Rounded Down).
 """)
 
 playing = True
 deck = game.newDeck()
 player, dealer = game.newGame(deck)
 while playing == True:
+    chips = int(player.chips)
+    bet = int(game.getBet(player, chips))
     game.newHand(dealer, player, deck)
     game.printHand(dealer, True)
     game.printHand(player)
@@ -31,6 +35,7 @@ while playing == True:
     while playerTurn:
         if player.hand.blackjack(): # Check for Player Blackjack
             print("BlackJack!")
+            bet += int(bet/2)
             playerTurn = False
             dealerTurn = False
         else:
@@ -60,7 +65,11 @@ while playing == True:
         else:
             dealerTurn = False
 
-    game.whoWon(player, dealer)
+    game.whoWon(player, dealer, bet)
+
+    if player.chips < 5:
+        print("Sorry, you do not have enough chips to continue playing.  Thanks for playing!")
+        break
 
     nextRound = input("Would you like to play again? (y/n): ")
     if nextRound.lower() == "y":
