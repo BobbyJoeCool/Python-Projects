@@ -10,7 +10,7 @@ class Card:
         return f"{self.rank}{self.suit}"
     
 class Deck:
-    def __init__(self, n):
+    def __init__(self, decks):
         suits = ["♠", "♥", "♦", "♣"]
         ranks = {
             "A": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6,
@@ -21,7 +21,7 @@ class Deck:
         self.cards = [] 
         i = 0
         
-        while i < n:
+        while i < decks:
             self.cards += [Card(rank, suit, ranks[rank]) for rank in ranks for suit in suits]
             i += 1
 
@@ -36,6 +36,7 @@ class Hand:
         self.cards = []
         self.value = 0
         self.valueSoft = None
+        self.bet = None
 
     def addCard(self, card):
         self.cards.append(card)
@@ -48,18 +49,21 @@ class Hand:
     def dealBlackjack(self):
     # Force the hand to always be a blackjack for testing
         self.cards = [
-            Card("A", "♠", 1),   # Ace
-            Card("K", "♥", 10)   # 10-value card
+            Card("K", "♥", 10),   # 10-value card
+            Card("A", "♠", 1)   # Ace
         ]
         self.updateValue()
 
-    def removeCard(self, card):
-        if card in self.cards:
-            self.cards.remove(card)
-        self.updateValue()
+    def dealSplit(self):
+    # Force the hand to always be eligible for a split for testing
+        self.cards = [
+            Card("5", "♥", 5),
+            Card("5", "♠", 5)  
+        ]
+        self.updateValue()        
 
-    def sortHand(self):
-        self.cards.sort(key=lambda c: (c.value))
+    def split(self):
+        return self.cards.pop(0)
 
     def clearHand(self):
         self.cards = []
@@ -113,10 +117,12 @@ class Player:
     def __init__(self, name="Player"):
         self.name = name
         self.hand = None
+        self.handSplit = None
         self.chips = None
 
     def newHand(self, hand):
         self.hand = hand
+        self.handSplit = None
     
 
 if __name__== "__main__":
