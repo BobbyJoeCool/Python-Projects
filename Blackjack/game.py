@@ -24,13 +24,13 @@ def newHand(dealer, player, deck):
     player.hand.clearHand()
     dealer.hand.clearHand()
     player.handSplit = None
-    # player.hand.addCard(deck.dealOne())
+    player.hand.addCard(deck.dealOne())
     dealer.hand.addCard(deck.dealOne())
-    # player.hand.addCard(deck.dealOne())
+    player.hand.addCard(deck.dealOne())
     dealer.hand.addCard(deck.dealOne())
     # dealer.hand.dealBlackjack() # Testing Dealer Blackjack
     # player.hand.dealBlackjack() # Testing Player Blackjack
-    player.hand.dealSplit()
+    # player.hand.dealSplit() # Testing Player Split
 
 
     print("---------------------------------")
