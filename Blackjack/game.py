@@ -1,19 +1,11 @@
 import classes
 
-def newDeck():
-    while True:
-        decks = input("How many decks would you like to play with (enter a number 1-6?): ")
-        if decks in ["1", "2", "3", "4", "5", "6"]:
-            break
-        else:
-            print("Please enter a valid number of decks for the shoe.")
-    
+def newDeck(decks):
     deck = classes.Deck(int(decks))
     return deck
 
-def newGame(deck):
-    playerName = input("What is your Name?: ")
-    player = classes.Player(playerName.strip())
+def newGame(playerName, decks):
+    player = classes.Player(playerName)
     dealer = classes.Player("Dealer")
     player.hand = classes.Hand(player)
     dealer.hand = classes.Hand(dealer)
