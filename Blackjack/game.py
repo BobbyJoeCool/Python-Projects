@@ -5,12 +5,13 @@ def newDeck(decks):
     return deck
 
 def newGame(playerName, decks):
+    deck = newDeck(decks)
     player = classes.Player(playerName)
     dealer = classes.Player("Dealer")
     player.hand = classes.Hand(player)
     dealer.hand = classes.Hand(dealer)
     player.chips = 50
-    return player, dealer
+    return player, dealer, deck
 
 def newHand(dealer, player, deck):
     player.hand.clearHand()

@@ -1,0 +1,1 @@
+# This contains all the helper functions that turn the database data into useable information for the user.
