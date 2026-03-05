@@ -1,0 +1,17 @@
+# .pre-commit-config.yaml
+
+repos:
+  # Ruff pre-commit hooks (lint + format)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.5  # valid current release tag
+    hooks:
+      - id: ruff-check    # linter
+        args: [--fix]     # optional: auto-fix on commit
+      - id: ruff-format   # formatter
+
+  # Black code formatter
+  - repo: https://github.com/psf/black
+    rev: 24.3.0  # official Black release
+    hooks:
+      - id: black
+        language_version: python3
