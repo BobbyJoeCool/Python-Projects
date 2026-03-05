@@ -6,7 +6,7 @@ This module contains all MySQL database functions related to:
 - Employee shift queries and reports
 - Job Function and Equipment Summaries
 
-All functions assume an active MySQL connection and return 
+All functions assume an active MySQL connection and return
 data formatted for GUI consumption.
 """
 
@@ -246,7 +246,7 @@ def editShift(
 
     query = f"""
     UPDATE ShiftLog
-    SET {', '.join(updates)}
+    SET {", ".join(updates)}
     WHERE ID = %s
     """
 
