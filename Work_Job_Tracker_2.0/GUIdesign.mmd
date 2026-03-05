@@ -1,0 +1,38 @@
+graph TD
+    Root["tk.Tk() Root Window"]
+
+    Root --> Notebook["ttk.Notebook"]
+
+    Notebook --> LogPage["LogPage (ttk.Frame)"]
+    Notebook --> ReportsPage["ReportsPage (ttk.Frame)"]
+    Notebook --> SettingsPage["SettingsPage (ttk.Frame)"]
+
+    %% Log Page Layout
+    LogPage --> LogControls["Control Frame"]
+    LogPage --> LogTable["ttk.Treeview (Shift Log)"]
+    LogPage --> LogButtons["Button Frame"]
+
+    LogControls --> DateFilter["Date Filter"]
+    LogControls --> EmployeeFilter["Employee Filter"]
+
+    LogButtons --> AddShift["Add Shift Button"]
+    LogButtons --> EditShift["Edit Shift Button"]
+    LogButtons --> DeleteShift["Delete Shift Button"]
+
+    %% Reports Page Layout
+    ReportsPage --> ReportControls["Report Controls"]
+    ReportsPage --> ReportOutput["Report Output Area"]
+
+    ReportControls --> ReportType["Report Type Selector"]
+    ReportControls --> GenerateReport["Generate Report Button"]
+
+    %% Settings Page Layout
+    SettingsPage --> ConfigOptions["Configuration Options"]
+    SettingsPage --> SaveSettings["Save Settings Button"]
+
+    %% Window Controls
+    Root --> MenuBar["Menu Bar"]
+    MenuBar --> FileMenu["File Menu"]
+    MenuBar --> HelpMenu["Help Menu"]
+
+    FileMenu --> ExitApp["Exit Application"]

@@ -1,0 +1,45 @@
+erDiagram
+    Equipment {
+        STR ID PK
+        STR Name
+    }
+
+    Functions {
+        INT ID PK
+        STR Name
+        STR Type
+        STR Equipment FK
+        BOOL Prod
+    }
+
+    Shifts {
+        STR ID PK
+        STR Days
+        STR Times
+    }
+
+    Employee {
+        STR ZNumber PK
+        STR FirstName
+        STR LastName
+        STR HomeShift FK
+        STR Role
+    }
+
+    ShiftLog {
+        INT ID PK
+        STR ZNumber FK
+        INT FunctionID FK
+        DATETIME TimeStarted
+        DATETIME TimeFinished
+        STR ShiftID FK
+        BOOL IsAbsent
+    }
+
+    Equipment ||--o{ Functions : Uses
+    Employee ||--o{ Shifts : Works_On
+    Employee ||--o{ ShiftLog : Logs_Shift
+    Shifts ||--o{ ShiftLog : Shift_Key
+    Functions ||--o{ ShiftLog : Job_Performed
+
+
